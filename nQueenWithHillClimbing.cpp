@@ -1,14 +1,14 @@
 #include <iostream>
 #include <ctime>
 using namespace std;
-const int N = 20;
-inline void findConflicts(int queenStates[], int addValues[], int subtractValues[], int& conflicts) {
+
+inline void findConflicts(int queenStates[], int addValues[], int subtractValues[], int& conflicts, int& noOfQueens) {
 	//int conflicts = 0;
 	conflicts = 0;
 	static int i;
 	static int j;
-	for (i = 0; i < N; i++) {
-		for (j = 0; j < N; j++) {
+	for (i = 0; i < noOfQueens; i++) {
+		for (j = 0; j < noOfQueens; j++) {
 			if (i == j) continue;
 			if (queenStates[i] == queenStates[j])
 				conflicts++;
@@ -23,16 +23,31 @@ inline void findConflicts(int queenStates[], int addValues[], int subtractValues
 
 
 int main() {
-
-	srand(time(NULL));
-	int currentQueenStates[N], tempQueens[N];
-	int currentConflicts, tempConflicts;
-	int addValues[N];
-	int subtractValues[N];
 	int col, row;
+	srand(time(NULL));
 	bool generateRandomState = true; // do we have to restart climbing with another randomly generated initial QueenPositions
 	unsigned long count = 0;
 	int i;
+	int currentConflicts, tempConflicts;
+	int N = 0;
+
+	do {
+		cout << "Enter No. of queen(n) for solution of n-queen problem: ";
+		cin >> N;
+		if (N < 4) {
+			cout << "\nEnter value of N greater than 3." << endl;
+		}
+	} while (N < 4);
+	
+	
+
+
+	int* currentQueenStates = new int[N];
+	int* tempQueens = new int[N];
+	int* addValues = new int[N];
+	int* subtractValues = new int[N];
+	
+	
 	while (generateRandomState) {
 		count++;
 		cout << count << "\t";
@@ -42,7 +57,7 @@ int main() {
 			subtractValues[col] = currentQueenStates[col] - col;
 		}
 
-		findConflicts(currentQueenStates, addValues, subtractValues, currentConflicts);
+		findConflicts(currentQueenStates, addValues, subtractValues, currentConflicts, N);
 		for (i = 0; i < N; i++) {
 			tempQueens[i] = currentQueenStates[i];
 			addValues[i] = tempQueens[i] + i;
@@ -57,7 +72,7 @@ int main() {
 						tempQueens[col] = row;
 						addValues[col] = tempQueens[col] + col;
 						subtractValues[col] = tempQueens[col] - col;
-						findConflicts(tempQueens, addValues, subtractValues, tempConflicts);
+						findConflicts(tempQueens, addValues, subtractValues, tempConflicts, N);
 						if (tempConflicts < currentConflicts) {
 							//	for (i = 0; i < N; i++) {
 							//	currentQueenStates[i] = tempQueens[i];
@@ -83,7 +98,7 @@ int main() {
 				//	<< "State space with local minimum is given below:" << endl;
 				break;
 			}
-			findConflicts(currentQueenStates, addValues, subtractValues, currentConflicts);
+			findConflicts(currentQueenStates, addValues, subtractValues, currentConflicts, N);
 		}
 		if (currentConflicts == 0)
 			generateRandomState = false;
@@ -91,7 +106,7 @@ int main() {
 	}
 	
 	//char *board[N] = { "----",  "----", "----", "----" };
-	int queenPositions[N];
+	int* queenPositions = new int[N];
 	for (col = 0; col < N; col++) {
 		queenPositions[currentQueenStates[col]] = col;
 	}
