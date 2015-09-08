@@ -24,7 +24,7 @@ inline void findConflicts(int queenStates[], int addValues[], int subtractValues
 
 int main() {
 	int col, row;
-	srand(time(NULL));
+	srand(time(NULL)); //seeds random-number generator rand() with system time
 	bool generateRandomState = true; // do we have to restart climbing with another randomly generated initial QueenPositions
 	unsigned long count = 0;
 	int i;
@@ -52,11 +52,11 @@ int main() {
 		cout << count << "\t";
 
 		for (col = 0; col < N; col++) {
-			currentQueenStates[col] = rand() % N;
+			currentQueenStates[col] = rand() % N; // placing queens in random places
 			addValues[col] = currentQueenStates[col] + col;
 			subtractValues[col] = currentQueenStates[col] - col;
 		}
-		findConflicts(currentQueenStates, addValues, subtractValues, currentConflicts, N);
+		findConflicts(currentQueenStates, addValues, subtractValues, currentConflicts, N); //update currentConflicts value to be used later in while loop
 
 		for (i = 0; i < N; i++) {
 			tempQueens[i] = currentQueenStates[i];
@@ -95,7 +95,7 @@ int main() {
 					break;
 			} // --- outer for loop
 
-			if (!newState) {
+			if (!newState) {// since cannot break from inner and outer loop with one break statement
 				//count++;
 				//cout << count << "\t";
 				//cout << "Stuck in Local minimum(for cost). Every move of a single queen increases conflicts.\n"
@@ -131,5 +131,10 @@ int main() {
 	
 	cout << endl;
 	system("pause");
+	delete[] currentQueenStates;
+	delete[] tempQueens;
+	delete[] addValues;
+	delete[] subtractValues;
+	delete[] queenPositions;
 	return 0;
 }
